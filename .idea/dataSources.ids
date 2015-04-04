@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - makeat@localhost" uuid="660f27d2-b7f8-49ed-b182-a5bc106c9fd7">
+    <database-info product="MySQL" version="5.6.21" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.34 ( Revision: jess.balint@oracle.com-20141014163213-wqbwpf1ok2kvo1om )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="makeat"/>
+    <table name="followedusers" schema="" catalog="makeat" type="TABLE">
+      <column name="userid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="followeduserid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="userid_fk,followeduserid"/>
+      <foreign-key name="userid_fk3" columns="userid_fk" ref-table="user" ref-schema="" ref-catalog="makeat" ref-columns="userid" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="list" schema="" catalog="makeat" type="TABLE">
+      <column name="itemnumber" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="userid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="item" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="itemnumber,userid_fk"/>
+      <foreign-key name="userid_fk" columns="userid_fk" ref-table="user" ref-schema="" ref-catalog="makeat" ref-columns="userid" update-rule="0" delete-rule="3" deferrability="2"/>
+      <index name="itemnumber_UNIQUE" unique="true" columns="itemnumber"/>
+    </table>
+    <table name="pantry" schema="" catalog="makeat" type="TABLE">
+      <column name="categoryid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="userid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="categorytitle" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="categoryid,userid_fk"/>
+      <foreign-key name="userid_fk2" columns="userid_fk" ref-table="user" ref-schema="" ref-catalog="makeat" ref-columns="userid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="categoryid" table="pantryitems" schema="" catalog="makeat" columns="categoryid_fk"/>
+      <index name="categoryid_UNIQUE" unique="true" columns="categoryid"/>
+      <index name="userid_fk2" unique="false" columns="userid_fk"/>
+    </table>
+    <table name="pantryitems" schema="" catalog="makeat" type="TABLE">
+      <column name="categoryid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="itemName" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="categoryid_fk,itemName"/>
+      <foreign-key name="categoryid" columns="categoryid_fk" ref-table="pantry" ref-schema="" ref-catalog="makeat" ref-columns="categoryid" update-rule="0" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="recipe" schema="" catalog="makeat" type="TABLE">
+      <column name="recipeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="userid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="timestamp" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="2000" scale="0" nullable="true" jdbcType="12"/>
+      <column name="pic1" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="pic2" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="pic3" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="url" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="recipeid,userid"/>
+      <foreign-key name="userid" columns="userid" ref-table="user" ref-schema="" ref-catalog="makeat" ref-columns="userid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="recipeid_fk2" table="recipebook" schema="" catalog="makeat" columns="recipeid_fk"/>
+      <exported-key name="recipeid" table="recipeingredients" schema="" catalog="makeat" columns="recipeid"/>
+      <exported-key name="recipeid_fk" table="recipestep" schema="" catalog="makeat" columns="recipeid_fk"/>
+      <index name="recipeid_UNIQUE" unique="true" columns="recipeid"/>
+      <index name="userid_idx" unique="false" columns="userid"/>
+    </table>
+    <table name="recipebook" schema="" catalog="makeat" type="TABLE">
+      <column name="userid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="recipeid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="userid_fk,recipeid_fk"/>
+      <foreign-key name="recipeid_fk2" columns="recipeid_fk" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="userid_fk4" columns="userid_fk" ref-table="user" ref-schema="" ref-catalog="makeat" ref-columns="userid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="recipeid_idx" unique="false" columns="recipeid_fk"/>
+      <index name="userid_idx" unique="false" columns="userid_fk"/>
+    </table>
+    <table name="recipeingredients" schema="" catalog="makeat" type="TABLE">
+      <column name="ingredientnumber" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="recipeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ingredient" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="ingredientnumber,recipeid"/>
+      <foreign-key name="recipeid" columns="recipeid" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="ingredientnumber_UNIQUE" unique="true" columns="ingredientnumber"/>
+    </table>
+    <table name="recipestep" schema="" catalog="makeat" type="TABLE">
+      <column name="stepid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="recipeid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="stepText" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="stepid,recipeid_fk"/>
+      <foreign-key name="recipeid_fk" columns="recipeid_fk" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="0" delete-rule="3" deferrability="2"/>
+      <index name="stepid_UNIQUE" unique="true" columns="stepid"/>
+    </table>
+    <table name="user" schema="" catalog="makeat" type="TABLE">
+      <column name="userid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="username" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="CHAR" precision="32" scale="0" nullable="false" jdbcType="1"/>
+      <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="bio" sqlType="VARCHAR" precision="500" scale="0" nullable="true" jdbcType="12" def="J1NheSBzb21ldGhpbmcgdGFzdHkn"/>
+      <column name="icon" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="userid"/>
+      <exported-key name="userid_fk3" table="followedusers" schema="" catalog="makeat" columns="userid_fk"/>
+      <exported-key name="userid_fk" table="list" schema="" catalog="makeat" columns="userid_fk"/>
+      <exported-key name="userid_fk2" table="pantry" schema="" catalog="makeat" columns="userid_fk"/>
+      <exported-key name="userid" table="recipe" schema="" catalog="makeat" columns="userid"/>
+      <exported-key name="userid_fk4" table="recipebook" schema="" catalog="makeat" columns="userid_fk"/>
+      <index name="iduser_UNIQUE" unique="true" columns="userid"/>
+    </table>
+  </data-source>
+</component>

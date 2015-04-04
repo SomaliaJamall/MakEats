@@ -1,0 +1,163 @@
+/*Styles by section: logged out*/
+
+@font-face{
+    font-family: 'BebasBold';
+    src: url('fonts/bebas/BebasNeue%20Bold-webfont.eot');
+    src: url('fonts/bebas/BebasNeue%20Bold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('fonts/bebas/BebasNeue%20Bold-webfont.woff') format('woff'),
+    url('fonts/bebas/BebasNeue%20Bold-webfont.ttf') format('truetype'),
+    url('fonts/bebas/BebasNeue%20Bold-webfont.svg#webfont') format('svg');
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+}
+
+#logoLink{
+    width:100%;
+    height:100%;
+    background: transparent url('images/logo.png') no-repeat center;
+    text-indent:-999em;
+    overflow: hidden;
+    display:block;
+}
+
+.clear{
+    clear:both;
+    margin:0;
+    min-height:1px;
+    background-color: transparent;
+}
+
+body{
+    background-color: #D30001;
+    margin: 0;
+    padding: 0;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+h1{
+    text-align: center;
+    line-height: normal;
+    color: #D30001;
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+    font-size:60px;
+}
+
+#loaderGif{
+    text-align: center;
+}
+
+h2{
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+    font-size:50px;
+    margin:0;
+}
+
+.error{
+    margin:0px;
+    color: #D30001;
+}
+
+.errorContainer{
+    margin:6px;
+}
+
+#screen1 .errorContainer{
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+    font-size: 35px;
+    margin:6px;
+}
+
+.success{
+    color: #007f01;
+}
+
+#submit{
+    color: #D30001;
+}
+
+#headerLoggedOut{
+    background-color: white;
+    height: 100px;
+}
+
+#contentLoggedOut, #contentLoggingIn{
+    /*height: 250px;*/
+    width: 750px;
+    margin: 60px auto 60px auto;
+    background-color: white;
+    padding:50px;
+}
+
+form label{
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+    font-size:40px;
+    margin-right:10px;
+    display: block;
+}
+
+form input{
+    font    : 25px Arial, Helvetica, sans-serif;
+    border: 3px solid #000000;
+    padding : 5px;
+    margin  : 0;
+    width   : 240px;
+    background: none;
+}
+
+form input:focus{
+    border-color   :#D30001;
+    outline-color: white;
+}
+
+#logInFromLoggedOut #usernameContainer, #logInFromLoggedOut #passwordContainer, #logInFromLoggedOut .button{
+    margin:5px 0;
+}
+
+button{
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+    color: #007f01;
+    font-size: 50px;
+    border       : 0 solid #333;
+    border-radius: 0;
+    background   : none;
+    cursor: pointer;
+    /*position: relative;
+    left: 155px;*/
+}
+
+#logInFromLoggedOut{
+    width:300px;
+    float:left;
+}
+
+#makAccountLink img{
+    margin: 85px 0 0 25px;
+    cursor: pointer;
+}
+
+#screen1{
+    /*display: none;*/
+}
+
+#screen2{
+
+}
+
+#screen2 form input{
+    width   : 300px;
+}
+
+#column1{
+    float:left;
+    width:325px;
+}
+
+#return{
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+    color: #D30001;
+    font-size: 30px;
+    cursor: pointer;
+}
+
