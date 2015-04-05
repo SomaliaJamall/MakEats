@@ -87,6 +87,7 @@
       <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
       <column name="bio" sqlType="VARCHAR" precision="500" scale="0" nullable="true" jdbcType="12" def="J1NheSBzb21ldGhpbmcgdGFzdHkn"/>
       <column name="icon" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="J0xldCdzIEVhdCc="/>
       <primary-key name="PRIMARY" columns="userid"/>
       <exported-key name="userid_fk3" table="followedusers" schema="" catalog="makeat" columns="userid_fk"/>
       <exported-key name="userid_fk" table="list" schema="" catalog="makeat" columns="userid_fk"/>

@@ -2,7 +2,7 @@
     <div class="return">X</div>
     <h1>Account Settings</h1>
     <ul>
-        <li><a href="logout.php">Logout</a></li>
+        <li><a href=<?php echo getLinkFromRoot("logout.php");?>>Logout</a></li>
         <li><a href="#" id="changeEmailLink">Change Email</a></li>
         <li><a href="#" id="changePasswordLink">Change Password</a></li>
         <li><a href="#" id="changeUsernameLink">Change Username</a></li>
@@ -26,7 +26,7 @@
     </script>
     <?php
     if(!empty($_POST['newEmail'])):
-        include_once "php/class.users.inc.php";
+        include_once $_SERVER['DOCUMENT_ROOT']."/php/class.users.inc.php";
         $users = new users($db);
         echo $users->changeEmail();
     endif;
@@ -50,7 +50,7 @@
     </script>
     <?php
     if(!empty($_POST['newUsername'])):
-        include_once "php/class.users.inc.php";
+        include_once $_SERVER['DOCUMENT_ROOT']."/php/class.users.inc.php";
         $users = new users($db);
         echo $users->changeUsername();
     endif;
@@ -73,13 +73,10 @@
             <button type="submit" id="submit">Change Password</button>
         </div>
     </form>
-    <script>
-        $("#changeUsernameForm").validate();
-    </script>
     <div id="passwordErrorText"></div>
     <?php
     if(!empty($_POST['newPassword'])):
-        include_once "php/class.users.inc.php";
+        include_once $_SERVER['DOCUMENT_ROOT']."/php/class.users.inc.php";
         $users = new users($db);
         $users->changePassword();
     endif;

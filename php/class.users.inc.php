@@ -99,7 +99,7 @@ class users
                 {
                     $row = $stmt->fetch();
                     $uid = $row['userid'];
-                    include("createUserPage.php");
+                    include($_SERVER['DOCUMENT_ROOT']."/createUserPage.php");
                 }
             }
             catch(PDOException $e){
@@ -164,6 +164,7 @@ class users
             $stmt->bindParam(':userid', $uid, PDO::PARAM_STR);
             $stmt->execute();
             $_SESSION['changesMade'] = 1;
+            header("Location: ".$_SERVER['REQUEST_URI']);
         }
         catch(PDOException $e)
         {
@@ -173,6 +174,7 @@ class users
 
     public function changeUsername()
     {
+        $oldU = strtolower($_SESSION['Username']);
         $newU = strtolower($_POST['newUsername']);
         $uid = $_SESSION['UserID'];
         $sql = "UPDATE user SET username=:username
@@ -184,6 +186,9 @@ class users
             $stmt->bindParam(':userid', $uid, PDO::PARAM_STR);
             $stmt->execute();
             $_SESSION['changesMade'] = 1;
+            rename($_SERVER['DOCUMENT_ROOT']."/user/".$oldU, $_SERVER['DOCUMENT_ROOT']."/user/".$newU);
+            $_SESSION['Username'] = $newU;
+            header("Location: ".$_SERVER['REQUEST_URI']);
         }
         catch(PDOException $e)
         {
@@ -215,8 +220,9 @@ class users
                     $stmt->bindParam(':newPassword', $_POST['newPassword'], PDO::PARAM_STR);
                     $stmt->bindParam(':userid', $_SESSION['UserID'], PDO::PARAM_STR);
                     $stmt->execute();
-                    return True;
                     $_SESSION['changesMade'] = 1;
+                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    return True;
                 } catch (PDOException $e) {
                     return FALSE;
                 }
@@ -235,5 +241,92 @@ class users
         }
 
         return False;
+    }
+
+    public function getBio($username)
+    {
+
+        $sql = "SELECT bio
+                FROM user
+                WHERE username=:username
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['bio'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getTitle($username)
+    {
+
+        $sql = "SELECT title
+                FROM user
+                WHERE username=:username
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['title'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getIcon($username)
+    {
+
+        $sql = "SELECT icon
+                FROM user
+                WHERE username=:username
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['icon'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
     }
 }

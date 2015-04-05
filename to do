@@ -41,9 +41,9 @@ form validation:
 
 ✔ Make header/footer/sidebar(?) php files to include
 
-get/make database
-    research how to encode passwords
-    encrypt passwords:
+✔get/make database
+    ✔research how to encode passwords
+    ✔encrypt passwords:
         http://webcheatsheet.com/php/md5_encrypt_passwords.php
 
 validate ingredients/pantry with USDA api:
