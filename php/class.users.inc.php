@@ -98,7 +98,6 @@ class users
                 if($stmt->rowCount()==1)
                 {
                     $row = $stmt->fetch();
-                    $uid = $row['userid'];
                     include($_SERVER['DOCUMENT_ROOT']."/createUserPage.php");
                 }
             }
@@ -227,7 +226,6 @@ class users
                     return FALSE;
                 }
 
-                return TRUE;
             }
             else
             {
@@ -240,7 +238,6 @@ class users
             return FALSE;
         }
 
-        return False;
     }
 
     public function getBio($username)
@@ -303,7 +300,6 @@ class users
 
     public function getIcon($username)
     {
-
         $sql = "SELECT icon
                 FROM user
                 WHERE username=:username
@@ -328,5 +324,213 @@ class users
         {
             return FALSE;
         }
+    }
+
+    public function getUserRecipeThumbnailList($username)
+    {
+        $uid = getUserID($username);
+        $sql = "SELECT recipeid, timestamp, title, pic1
+                FROM recipe
+                WHERE userid=:uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $uid, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1)
+            {
+                while($row = $stmt->fetch()) {
+                    echo <<< THUMBHTML
+<a href="{$row['recipeid']}">
+        <span class="recipeLink" style="background-image: url('recipe/recipeimages/{$row['pic1']}');">
+            <span class="recipeTitle"><span>{$row['title']}</span></span>
+        </span>
+</a>
+THUMBHTML;
+                }
+            }
+            else
+            {
+                echo "<div class='noRecipes'>You haven't uploaded any recipes yet! Click the New Recipe link at the top right to get started.</div>";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+        return True;
+    }
+
+    /**
+     * @return bool
+     */
+    public function submitRecipe()
+    {
+        $uid = $_SESSION['UserID'];
+        $timestamp = time();
+        $title = $_POST['title'];
+        $description = $_POST['description'];
+        $sql = "INSERT INTO recipe (userid, timestamp, title, description)
+                VALUES (:uid, :timestamp, :title, :description)";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $uid, PDO::PARAM_STR);
+            $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR);
+            $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            $stmt->execute();
+
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+
+        $recipeId = $this->_db->lastInsertID();
+
+        $recipeDir="user/".$_SESSION["Username"]."/recipes/".$recipeId."/recipeImages/";
+        if (!is_dir($recipeDir))
+        {
+            mkdir($recipeDir, 0755, true);
+        }
+        $i=1;
+        foreach ($_FILES["photos"]["error"] as $key => $error) {
+            if ($error == UPLOAD_ERR_OK) {
+
+                $target_dir = $recipeDir;
+                $file_name =  basename($_FILES["photos"]["name"][$key]);
+                $target_file = $target_dir .$file_name;
+                $uploadOk = 1;
+                $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+                // Check if image file is a actual image or fake image
+                $check = getimagesize($_FILES["photos"]["tmp_name"][$key]);
+                if ($check !== false) {
+                    $uploadOk = 1;
+                } else {
+                    echo "File is not an image.";
+                    $uploadOk = 0;
+                }
+                // Check if file already exists
+                if (file_exists($target_file)) {
+                    echo "Sorry, file already exists.";
+                    $uploadOk = 0;
+                }
+                // Check file size
+                if ($_FILES["photos"]["size"][$key] > 500000) {
+                    echo "Sorry, your file is too large.";
+                    $uploadOk = 0;
+                }
+                // Allow certain file formats
+                if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                    && $imageFileType != "gif"
+                ) {
+                    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                    $uploadOk = 0;
+                }
+                // Check if $uploadOk is set to 0 by an error
+                if ($uploadOk == 0) {
+                    echo "Sorry, your file was not uploaded.";
+                    // if everything is ok, try to upload file
+                } else {
+                    if (move_uploaded_file($_FILES["photos"]["tmp_name"][$key], $target_file)) {
+                        $sql = "UPDATE recipe
+                                SET pic".$i." = :picname
+                                WHERE recipeid = :rid";
+                        try
+                        {
+                            $stmt = $this->_db->prepare($sql);
+                            $stmt->bindParam(':picname', $file_name, PDO::PARAM_STR);
+                            $stmt->bindParam(':rid', $recipeId, PDO::PARAM_STR);
+                            $stmt->execute();
+
+                        }
+                        catch(PDOException $e)
+                        {
+                            return FALSE;
+                        }
+                        $i++;
+                    } else {
+                        echo "Sorry, there was an error uploading your file.";
+                    }
+                }
+            }
+        }
+
+        $i=1;
+        foreach ($_POST["ingredients"] as $ingredient){
+            if (!empty($ingredient)){
+
+                $sql = "INSERT INTO recipeingredients (ingredientnumber, recipeid, ingredient)
+                VALUES (:number, :recipeid, :ingredient)";
+                try
+                {
+                    $stmt = $this->_db->prepare($sql);
+                    $stmt->bindParam(':number', $i, PDO::PARAM_STR);
+                    $stmt->bindParam(':recipeid', $recipeId, PDO::PARAM_STR);
+                    $stmt->bindParam(':ingredient', $ingredient, PDO::PARAM_STR);
+                    $stmt->execute();
+                    $i++;
+                }
+                catch(PDOException $e)
+                {
+                    return FALSE;
+                }
+            }
+        }
+
+        $i=1;
+        foreach ($_POST["steps"] as $step){
+            if (!empty($step)){
+
+                $sql = "INSERT INTO recipestep (stepid, recipeid_fk, stepText)
+                VALUES (:number, :recipeid, :step)";
+                try
+                {
+                    $stmt = $this->_db->prepare($sql);
+                    $stmt->bindParam(':number', $i, PDO::PARAM_STR);
+                    $stmt->bindParam(':recipeid', $recipeId, PDO::PARAM_STR);
+                    $stmt->bindParam(':step', $step, PDO::PARAM_STR);
+                    $stmt->execute();
+                    $i++;
+                }
+                catch(PDOException $e)
+                {
+                    return FALSE;
+                }
+            }
+        }
+        return True;
+    }
+}
+
+function getUserID($username)
+{
+    try {
+        $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME;
+        $db = new PDO($dsn, DB_USER, DB_PASS);
+    } catch (PDOException $e) {
+        echo 'Connection failed: ' . $e->getMessage();
+        exit;
+    }
+
+    $sql = "SELECT userid
+                FROM user
+                WHERE username = :username";
+    try {
+        $stmt = $db->prepare($sql);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() == 1) {
+                $row = $stmt->fetch();
+                return  $row['userid'];
+            }
+            else{
+                return -1;
+            }
+        } catch (PDOException $e) {
+        return FALSE;
     }
 }

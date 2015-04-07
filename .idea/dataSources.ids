@@ -46,7 +46,6 @@
       <column name="pic1" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
       <column name="pic2" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
       <column name="pic3" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
-      <column name="url" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="recipeid,userid"/>
       <foreign-key name="userid" columns="userid" ref-table="user" ref-schema="" ref-catalog="makeat" ref-columns="userid" update-rule="3" delete-rule="3" deferrability="2"/>
       <exported-key name="recipeid_fk2" table="recipebook" schema="" catalog="makeat" columns="recipeid_fk"/>
@@ -65,20 +64,18 @@
       <index name="userid_idx" unique="false" columns="userid_fk"/>
     </table>
     <table name="recipeingredients" schema="" catalog="makeat" type="TABLE">
-      <column name="ingredientnumber" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="ingredientnumber" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="recipeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="ingredient" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="ingredientnumber,recipeid"/>
-      <foreign-key name="recipeid" columns="recipeid" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="3" delete-rule="3" deferrability="2"/>
-      <index name="ingredientnumber_UNIQUE" unique="true" columns="ingredientnumber"/>
+      <foreign-key name="recipeid" columns="recipeid" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="0" delete-rule="0" deferrability="2"/>
     </table>
     <table name="recipestep" schema="" catalog="makeat" type="TABLE">
-      <column name="stepid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="stepid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="recipeid_fk" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="stepText" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="stepid,recipeid_fk"/>
-      <foreign-key name="recipeid_fk" columns="recipeid_fk" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="0" delete-rule="3" deferrability="2"/>
-      <index name="stepid_UNIQUE" unique="true" columns="stepid"/>
+      <foreign-key name="recipeid_fk" columns="recipeid_fk" ref-table="recipe" ref-schema="" ref-catalog="makeat" ref-columns="recipeid" update-rule="0" delete-rule="0" deferrability="2"/>
     </table>
     <table name="user" schema="" catalog="makeat" type="TABLE">
       <column name="userid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>

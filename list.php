@@ -8,7 +8,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
      * Date: 3/15/2015
      * Time: 5:17 PM
      */
-    $pageTitle="Recipe Book";
+    $pageTitle="List";
     include("header.php"); ?>
     <!--script so that .listColumn divs "flow" around one another-->
 

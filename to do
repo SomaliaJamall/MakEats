@@ -1,12 +1,22 @@
 things that need to happen:
 Finish html/css/javascript for:
+    make "edit this userpage" form
+    ✔ make "add new recipe" form
+        add restrictions on character length
     produce graphics/verbiage for empty pages
+    create favicon (64×64 32×32, 24×24, and 16×16):
+        note: http://www.xiconeditor.com/
+    make "add to recipeBook" confirmation popup
+    ✔ pantry
+            ✔ - Dynamic div "flowing": http://masonry.desandro.com/
+            - "add item" form pops up, goes:
+                type in ingredient -> pick ingredient from list (USDA generated) -> ingredient is added to list of ingr. to add
+                -> once all ingredients chosen, user clicks "submit" -> ingredients added to user's pantry database
+                -> appear in pantry
+            - add item quantities
     ✔account settings
         ✔ - overlay pop-up with javascript
         ✔ - Pop up confirmation of change
-    add recipe
-        - overlay pop-up with javascript
-    "add to recipeBook" popup has to do... something
     ✔ logged-in homepage/feed
         ✔ - Add a "more" link to recipes
         ✔ - Add link to add recipe to recipe book
@@ -15,28 +25,19 @@ Finish html/css/javascript for:
     ✔ log-in screen
         ✔ - create account creation javascript
         ✔ - Add form checking to log-in form
-    create favicon (64×64 32×32, 24×24, and 16×16):
-         note: http://www.xiconeditor.com/
     ✔ user pages
-        note: add user title to database
+        ✔ note: add user title to database
     ✔ recipe permalink page
         add like/share count
     ✔ my recipes
-    ✔ pantry
-        ✔ - Dynamic div "flowing": http://masonry.desandro.com/
-        - "add item" form pops up, goes:
-            type in ingredient -> pick ingredient from list (USDA generated) -> ingredient is added to list of ingr. to add
-            -> once all ingredients chosen, user clicks "submit" -> ingredients added to user's pantry database
-            -> appear in pantry
-        - add item quantities
     ✔ shopping list
 
-form styling:
+✔ form styling:
     https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/Styling_HTML_forms
     if time add extra error checking on account options screen
     Username should NOT be case sensitive (make username comparision function?)
 
-form validation:
+✔ form validation:
     http://jqueryvalidation.org/documentation/
 
 ✔ Make header/footer/sidebar(?) php files to include

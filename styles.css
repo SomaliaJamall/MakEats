@@ -74,6 +74,15 @@ form input{
     background: none;
 }
 
+form textarea{
+    font    : 25px Arial, Helvetica, sans-serif;
+    border: 3px solid #000000;
+    padding : 5px;
+    margin  : 0;
+    width: 300px;
+    background: none;
+}
+
 form input:focus{
     border-color   :#D30001;
     outline-color: white;
@@ -223,7 +232,7 @@ button{
     margin: 0 0;
 }
 
-#feed, #recipeBook, #pantry, #list, #userPage, #recipePage{
+#feed, #recipeBook, #pantry, #list, #userPage, #recipePage, #newRecipe{
     background-color: white;
     width: 750px;
     /*padding:0 30px;*/
@@ -502,6 +511,12 @@ button{
     line-height: normal;
 }
 
+#userPage .noRecipes{
+    text-align:center;
+    font-size:30px;
+    font-family: 'BebasBold', Arial, Helvetica, sans-serif;
+}
+
 /*Styles by section: #recipePage div*/
 
 #recipePage .recipeTitle{
@@ -599,4 +614,56 @@ button{
 
 #recipePage .recipeContent{
     margin-bottom:30px;
+}
+
+/*Styles by section: #newRecipe div*/
+
+#addRecipeForm label{
+    font-size:40px;
+    margin:0;
+}
+
+#addRecipeForm input{
+    font-size:12px;
+    margin:0;
+}
+
+#addRecipeForm div, #addRecipeForm li{
+    margin:5px 0;
+}
+
+#addRecipeForm ol{
+    padding-left:10px;
+}
+
+#addRecipeForm button{
+    font-size:50px;
+    margin:0;
+}
+
+#addRecipeForm .remove_field{
+    color: #D30001;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+#addRecipeForm .steps_fields_wrap input{
+    width:500px;
+}
+
+#addRecipeForm textarea{
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#addRecipeForm .addIngredientButton, #addRecipeForm .addPicturesButton,
+#addRecipeForm .addStepButton{
+    color: #007f01;
+}
+
+#addRecipeForm .error{
+    color: #D30001;
+    font-size: 20px;
 }

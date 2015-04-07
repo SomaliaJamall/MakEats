@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT']."/php/pdo.php";
+include_once "php/pdo.php";
 
 $HTMLRoot = "/SE%20Project%20-%20MakEats/";
 function getLinkFromRoot($fileName){
@@ -35,7 +35,7 @@ function getLinkFromRoot($fileName){
         </ul>
     </div>
     <div id="newRecipeLink">
-        <a href="#"><img alt="add" src=<?php echo getLinkFromRoot("images/add.png");?> />
+        <a href=<?php echo getLinkFromRoot("newRecipe.php");?>><img alt="add" src=<?php echo getLinkFromRoot("images/add.png");?> />
             New Recipe</a>
     </div>
     <div class="clear"></div>
