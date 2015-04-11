@@ -6,7 +6,8 @@
  * Time: 5:17 PM
  */
 
-include("header.php"); ?>
+include("header.php");
+include_once "../../php/class.users.inc.php";?>
     <!--
     the # feed div must be populated based on the information stored in the feed database
     -->

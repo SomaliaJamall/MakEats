@@ -11,7 +11,9 @@ $(document).ready(function(){
     centerDivOverlay("#changeEmail");
     centerDivOverlay("#changeUsername");
     centerDivOverlay("#changePassword");
-    centerDivOverlay("#changesMade")
+    centerDivOverlay("#changesMade");
+    centerDivOverlay("#success");
+    centerDivOverlay("#failure");
 
 
     $('#accountSettingsLink').click(function(){
@@ -26,6 +28,9 @@ $(document).ready(function(){
         $("#changeUsername").fadeOut("fast");
         $("#changePassword").fadeOut("fast");
         $("#changesMade").fadeOut("fast");
+        $("#success").fadeOut("fast");
+        $("#failure").fadeOut("fast");
+
     });
 
     $('div.return').click(function(){
@@ -35,6 +40,8 @@ $(document).ready(function(){
         $("#changeUsername").fadeOut("fast");
         $("#changePassword").fadeOut("fast");
         $("#changesMade").fadeOut("fast");
+        $("#success").fadeOut("fast");
+        $("#failure").fadeOut("fast");
 
     });
 

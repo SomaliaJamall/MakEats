@@ -17,7 +17,12 @@ Each .savedRecipe div must be generated based on the information stored in the s
     <div id="content">
         <div id="recipeBook">
             <h1>Recipe Book</h1>
-            <a href="recipe.php">
+            <?php
+            include_once "php/pdo.php";
+            include_once "php/class.users.inc.php";
+            $users = new users($db);
+            $users->getUserRecipeBook($_SESSION['UserID'])?>
+            <!--<a href="recipe.php">
                 <span class="savedRecipe" style="background-image: url('exampleIMGs/img2.jpg');">
                     <span class="recipeTitle"><span>Black Bean Burger </span></span>
                 </span>
@@ -36,7 +41,7 @@ Each .savedRecipe div must be generated based on the information stored in the s
             </span>
             <span class="savedRecipe" style="background-image: url('exampleIMGs/img1.jpg');">
                 <span class="recipeTitle"><span>Tasty Watermelon Breakfast</span></span>
-            </span>
+            </span>-->
             <div class="clear"></div>
         </div>
     </div>

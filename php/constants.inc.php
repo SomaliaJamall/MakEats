@@ -10,5 +10,6 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', 'kesssekk');
 define('DB_NAME', 'makeat');
+define('HTTP_SERVER', 'C:/xampp/htdocs/SE Project - MakEats');
 
 ?>

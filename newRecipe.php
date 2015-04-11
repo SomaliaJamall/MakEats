@@ -13,10 +13,10 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
     <div id="content">
         <div id="newRecipe">
             <h1>Add New Recipe</h1>
-            <form method="post" enctype="multipart/form-data" action=<?php echo "'".$_SERVER['REQUEST_URI']."'"; ?> id="addRecipeForm">
-                <label for="title">Title</label>
+            <form method="post" enctype="multipart/form-data" action=<?php echo "user/".$_SESSION['Username']."/index.php"; ?> id="addRecipeForm">
+                <label for="recipe_title">Title</label>
                 <div class="title">
-                    <div><input type="text" name="title" required></div>
+                    <div><input type="text" name="recipe_title" required></div>
                 </div>
 
                 <label for="description">Description</label>
@@ -103,13 +103,6 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
             })
         }
     </script>
-    <?php
-    if(!empty($_POST['title'])):
-        include_once "php/class.users.inc.php";
-        $users = new users($db);
-        echo $users->submitRecipe();
-    endif;
-    ?>
     <?php include("footer.php");
 else:
     include("index_loggedOut.php");

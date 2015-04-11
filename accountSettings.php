@@ -83,6 +83,18 @@
     ?>
 </div>
 
+<div id="success">
+    <div class="return"> X </div>
+    <div></div>
+    <h2>Recipe: <b><?php echo $recipeTitle; ?></b><br/>Added to RecipeBook!</h2>
+</div>
+
+<div id="failure">
+    <div class="return"> X </div>
+    <div></div>
+    <h2>Recipe: <b><?php echo $recipeTitle; ?></b><br/>Already In RecipeBook</h2>
+</div>
+
 <div id="changesMade">
     <div class="back"> << </div>
     <div class="return"> X </div>

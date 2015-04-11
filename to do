@@ -1,6 +1,9 @@
+copy over new recipe page code to createNewRecipe (the code from 83)
+
 things that need to happen:
 Finish html/css/javascript for:
     make "edit this userpage" form
+    make "follow user"
     ✔ make "add new recipe" form
         add restrictions on character length
     produce graphics/verbiage for empty pages

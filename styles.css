@@ -41,6 +41,10 @@ a{
     text-decoration: none;
 }
 
+b{
+    color: #D30001;
+}
+
 h1{
     line-height: 100px;
     font-size: 60px;
@@ -135,7 +139,7 @@ button{
 }
 
 
-#accountSettings, #changeEmail, #changeUsername, #changePassword, #changesMade{
+#accountSettings, #changeEmail, #changeUsername, #changePassword, #changesMade, #success, #failure{
     display: none;
     position:absolute;
     z-index: 2;
@@ -656,6 +660,7 @@ button{
 #addRecipeForm textarea{
     font-size: 12px;
     font-family: Arial, Helvetica, sans-serif;
+    height: 300px;
 }
 
 #addRecipeForm .addIngredientButton, #addRecipeForm .addPicturesButton,

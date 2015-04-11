@@ -98,7 +98,7 @@ class users
                 if($stmt->rowCount()==1)
                 {
                     $row = $stmt->fetch();
-                    include($_SERVER['DOCUMENT_ROOT']."/createUserPage.php");
+                    include("createUserPage.php");
                 }
             }
             catch(PDOException $e){
@@ -240,6 +240,35 @@ class users
 
     }
 
+    public function getUsername($userid)
+    {
+
+        $sql = "SELECT username
+                FROM user
+                WHERE userid=:uid
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $userid, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['username'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
     public function getBio($username)
     {
 
@@ -342,8 +371,8 @@ class users
             {
                 while($row = $stmt->fetch()) {
                     echo <<< THUMBHTML
-<a href="{$row['recipeid']}">
-        <span class="recipeLink" style="background-image: url('recipe/recipeimages/{$row['pic1']}');">
+<a href="recipes/{$row['recipeid']}">
+        <span class="recipeLink" style="background-image: url('recipes/{$row['recipeid']}/recipeimages/{$row['pic1']}');">
             <span class="recipeTitle"><span>{$row['title']}</span></span>
         </span>
 </a>
@@ -369,7 +398,7 @@ THUMBHTML;
     {
         $uid = $_SESSION['UserID'];
         $timestamp = time();
-        $title = $_POST['title'];
+        $title = $_POST['recipe_title'];
         $description = $_POST['description'];
         $sql = "INSERT INTO recipe (userid, timestamp, title, description)
                 VALUES (:uid, :timestamp, :title, :description)";
@@ -390,7 +419,7 @@ THUMBHTML;
 
         $recipeId = $this->_db->lastInsertID();
 
-        $recipeDir="user/".$_SESSION["Username"]."/recipes/".$recipeId."/recipeImages/";
+        $recipeDir=HTTP_SERVER."/user/".$_SESSION["Username"]."/recipes/".$recipeId."/recipeImages/";
         if (!is_dir($recipeDir))
         {
             mkdir($recipeDir, 0755, true);
@@ -501,6 +530,328 @@ THUMBHTML;
                 }
             }
         }
+        include("createRecipePage.php");
+        return True;
+    }
+
+    public function getRecipeTitle($recipeNum)
+    {
+
+        $sql = "SELECT title
+                FROM recipe
+                WHERE recipeid=:rid
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['title'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getRecipeUserID($recipeNum)
+    {
+
+        $sql = "SELECT userid
+                FROM recipe
+                WHERE recipeid=:rid
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['userid'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getRecipeTimestamp($recipeNum)
+    {
+
+        $sql = "SELECT timestamp
+                FROM recipe
+                WHERE recipeid=:rid
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['timestamp'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+    public function getRecipeDescription($recipeNum)
+    {
+
+        $sql = "SELECT description
+                FROM recipe
+                WHERE recipeid=:rid
+                LIMIT 1";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                return $row['description'];
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getRecipeThumbnails($recipeNum)
+    {
+
+        $sql = "SELECT pic1, pic2, pic3
+                FROM recipe
+                WHERE recipeid=:rid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()==1)
+            {
+                $row = $stmt->fetch();
+                if($row['pic1'] and $row['pic2'] and $row['pic3']){
+                    echo "<div class='threePics foodPics''>";
+                }
+                elseif($row['pic1'] and $row['pic2']){
+                    echo "<div class='twoPics foodPics''>";
+                }
+                else{
+                    echo "<div class='onePic foodPics''>";
+                }
+                echo "<ul>";
+                if ($row['pic1']){
+                    echo "<li><a href='recipeImages/".$row['pic1']."' data-lightbox='".$recipeNum."'><img src='recipeImages/".$row['pic1']."'></a></li>";
+                }
+                if ($row['pic2']){
+                    echo "<li><a href='recipeImages/".$row['pic2']."' data-lightbox='".$recipeNum."'><img src='recipeImages/".$row['pic2']."'></a></li>";
+                }
+                if ($row['pic3']){
+                    echo "<li><a href='recipeImages/".$row['pic3']."' data-lightbox='".$recipeNum."'><img src='recipeImages/".$row['pic3']."'></a></li>";
+                }
+                echo "</ul>";
+                echo "</div>";
+                return True;
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getRecipeIngredients($recipeNum)
+    {
+
+        $sql = "SELECT ingredient
+                FROM recipeingredients
+                WHERE recipeid=:rid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1)
+            {
+                echo "<ul>";
+                while($row = $stmt->fetch()) {
+                    echo "<li>".$row['ingredient']."</li>";
+                }
+                echo "</ul>";
+                return True;
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getRecipeSteps($recipeNum)
+    {
+
+        $sql = "SELECT stepText
+                FROM recipestep
+                WHERE recipeid_fk=:rid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1)
+            {
+                echo "<ol>";
+                while($row = $stmt->fetch()) {
+                    echo "<li>".$row['stepText']."</li>";
+                }
+                echo "</ol>";
+                return True;
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function addToRecipeBook($recipeNum, $userID)
+    {
+        $sql = "SELECT recipeid_fk
+                FROM recipebook
+                WHERE recipeid_fk=:rid
+                AND userid_fk=:uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+            $stmt->bindParam(':uid', $userID, PDO::PARAM_STR);
+            $stmt->execute();
+            if($stmt->rowCount()==0) {
+                $sql = "INSERT INTO recipebook (userid_fk, recipeid_fk)
+                        VALUES (:uid, :rid)";
+                try {
+                    $stmt = $this->_db->prepare($sql);
+                    $stmt->bindParam(':rid', $recipeNum, PDO::PARAM_STR);
+                    $stmt->bindParam(':uid', $userID, PDO::PARAM_STR);
+                    $stmt->execute();
+                    return "success";
+                } catch (PDOException $e) {
+                    return FALSE;
+                }
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getUserRecipeBook($userid)
+    {
+        $sql = "SELECT recipeid_fk, userid_fk
+                FROM recipeBook
+                WHERE userid_fk=:uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $userid, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1)
+            {
+                while($row = $stmt->fetch()) {
+                    $recipeID = $row["recipeid_fk"];
+                    $sqlIn = "SELECT timestamp, title, pic1, recipeid, userid
+                    FROM recipe
+                    WHERE recipeid=:rid
+                    LIMIT 1";
+                    try
+                    {
+                        $stmt2 = $this->_db->prepare($sqlIn);
+                        $stmt2->bindParam(':rid', $recipeID, PDO::PARAM_STR);
+                        $stmt2->execute();
+                        $stmt2->setFetchMode(PDO::FETCH_ASSOC);
+                        if($stmt2->rowCount()==1)
+                        {
+                            $reciperow = $stmt2->fetch();
+                            $recipeAuthorUsername = getUsername($reciperow['userid']);
+                            echo <<< THUMBHTML
+<a href="user/$recipeAuthorUsername/recipes/{$reciperow['recipeid']}">
+        <span class="savedRecipe" style="background-image: url('user/$recipeAuthorUsername/recipes/{$reciperow['recipeid']}/recipeimages/{$reciperow['pic1']}');">
+            <span class="recipeTitle"><span>{$reciperow['title']}</span></span>
+        </span>
+</a>
+THUMBHTML;
+                        }
+                        else
+                        {
+                            echo "<div class='noRecipes'>Error getting recipes</div>";
+                        }
+                    }
+                    catch(PDOException $e)
+                    {
+                        echo "error accessing recipe book database";
+                        return FALSE;
+                    }
+                }
+            }
+            else
+            {
+                echo "<div class='noRecipes'>You haven't saved any recipes to your Recipe Book yet! Click the \"Add to Recipe Book\" link on any recipe to save it here.</div>";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
         return True;
     }
 }
@@ -531,6 +882,36 @@ function getUserID($username)
                 return -1;
             }
         } catch (PDOException $e) {
+        return FALSE;
+    }
+}
+
+function getUsername($userid)
+{
+    try {
+        $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME;
+        $db = new PDO($dsn, DB_USER, DB_PASS);
+    } catch (PDOException $e) {
+        echo 'Connection failed: ' . $e->getMessage();
+        exit;
+    }
+
+    $sql = "SELECT username
+                FROM user
+                WHERE userid = :userid";
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':userid', $userid, PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        if ($stmt->rowCount() == 1) {
+            $row = $stmt->fetch();
+            return  $row['username'];
+        }
+        else{
+            return -1;
+        }
+    } catch (PDOException $e) {
         return FALSE;
     }
 }

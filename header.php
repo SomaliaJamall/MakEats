@@ -13,8 +13,10 @@ function getLinkFromRoot($fileName){
     <meta charset="UTF-8">
     <title>MakEats - <?php echo $pageTitle;?></title>
     <link rel="stylesheet" type="text/css" href=<?php echo getLinkFromRoot("styles.css");?>>
+    <link rel="stylesheet" href=<?php echo getLinkFromRoot("scripts/lightbox/css/lightbox.css");?> />
     <script src=<?php echo getLinkFromRoot("scripts/masonry/masonry.pkgd.min.js");?>></script>
     <script src=<?php echo getLinkFromRoot("scripts/jquery-1.11.2.min.js");?>></script>
+    <script src=<?php echo getLinkFromRoot("scripts/lightbox/js/lightbox.min.js");?>></script>
     <script src=<?php echo getLinkFromRoot("scripts/jquery.validate.js");?>></script>
     <script src=<?php echo getLinkFromRoot("scripts/script.js");?>></script>
 </head>
