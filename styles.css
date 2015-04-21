@@ -153,7 +153,8 @@ button{
 }
 
 
-#accountSettings, #changeEmail, #changeUsername, #changePassword, #changesMade, #success, #failure, #follow, #addToPantry{
+#accountSettings, #changeEmail, #changeUsername, #changePassword,
+#changesMade, #success, #failure, #follow, #addToPantry, #addToList{
     display: none;
     position:absolute;
     z-index: 2;
@@ -453,6 +454,7 @@ button{
     font-weight: bold;
     font-family: 'BebasBold', Arial, Helvetica, sans-serif;
     color: #D30001;
+    cursor: pointer;
 }
 
 #list #addItemsToPantry{
@@ -726,22 +728,22 @@ button{
     margin:10px 20px;
 }
 
-/*Styles by section: #addToPantry div*/
-#addToPantryForm label{
+/*Styles by section: #addToPantry and #addToList div*/
+#addToPantryForm label, #addToList label{
     font-size:40px;
     margin:0;
 }
 
-#addToPantryForm input{
+#addToPantryForm input, #addToList input{
     font-size:12px;
     margin:3px 0;
 }
-#addToPantryForm button{
+#addToPantryForm button, #addToList button{
     font-size:50px;
     margin:0;
 }
 
-#addToPantryForm .remove_field{
+#addToPantryForm .remove_field, #addToList .remove_field{
     color: #D30001;
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
@@ -750,21 +752,21 @@ button{
 }
 
 
-#addToPantryForm textarea{
+#addToPantryForm textarea, #addToList textarea{
     font-size: 12px;
     font-family: Arial, Helvetica, sans-serif;
     height: 300px;
 }
 
-#addToPantryForm .addItemButton{
+#addToPantryForm .addItemButton, #addToList .listAddItemButton{
     color: #007f01;
 }
 
-#addToPantryForm .error{
+#addToPantryForm .error, #addToList .error{
     color: #D30001;
     font-size: 20px;
 }
 
-#addToPantryForm .itemNameContainer input{
+#addToPantryForm .itemNameContainer input, #addToList .listItemNameContainer input{
     width:500px;
 }

@@ -108,7 +108,6 @@
             <button type="submit" id="submit">Add Items</button>
         </div>
     </form>
-    <div id="passwordErrorText"></div>
     <script>
         if($("#categoryDrop").val() == 'New Category') {
             $("#categoryNameContainer").css("display", "inline")
@@ -121,7 +120,7 @@
                 $("#categoryNameContainer").css("display", "none")
             }
         });
-        dynamicFields(10, "text", "#itemNameContainer", ".addItemButton", 1, "itemName");
+        dynamicFields(5, "text", "#itemNameContainer", ".addItemButton", 1, "itemName");
         function dynamicFields(max_fields, type, wrapper_id, add_button_id, initialCount, inputName){
             var wrapper         = $(wrapper_id); //Fields wrapper
             var add_button      = $(add_button_id); //Add button ID
@@ -145,6 +144,47 @@
         include_once $_SERVER['DOCUMENT_ROOT']."/SE Project - MakEats/php/class.users.inc.php";
         $users = new users($db);
         $users->addToPantry();
+    endif;
+    ?>
+</div>
+
+<div id="addToList">
+    <div class="return"> X </div>
+    <form method="post" action=<?php echo "'".$_SERVER['REQUEST_URI']."'"; ?> id="addToListForm">
+        <label for="listItemName">List Items</label>
+        <div id="listItemNameContainer">
+            <input type="text" id="listItemName" name="listItemName[]" required aria-required="true">
+        </div>
+        <button class="listAddItemButton">+</button>
+        <div class="listAddButton">
+            <button type="submit" id="listItemSubmit">Add Items</button>
+        </div>
+    </form>
+    <script>
+        dynamicFields(5, "text", "#listItemNameContainer", ".listAddItemButton", 1, "listItemName");
+        function dynamicFields(max_fields, type, wrapper_id, add_button_id, initialCount, inputName){
+            var wrapper         = $(wrapper_id); //Fields wrapper
+            var add_button      = $(add_button_id); //Add button ID
+
+            var x = initialCount; //initial text box count
+            $(add_button).click(function(e){ //on add input button click
+                e.preventDefault();
+                if(x < max_fields){ //max input box allowed
+                    x++; //text box increment
+                    $(wrapper).append('<div><input type="'+type+'" name="'+inputName+'[]"/><a href="#" class="remove_field">X</a></div>'); //add input box
+                }
+            });
+
+            $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                e.preventDefault(); $(this).parent('div').remove(); x--;
+            })
+        }
+    </script>
+    <?php
+    if(!empty($_POST['listItemName'][0])):
+        include_once $_SERVER['DOCUMENT_ROOT']."/SE Project - MakEats/php/class.users.inc.php";
+        $users = new users($db);
+        $users->addToList();
     endif;
     ?>
 </div>

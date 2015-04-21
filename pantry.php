@@ -35,33 +35,33 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
                     $users->getPantry();
                 ?>
                 <script>
+                    $('#addItemsLink').click(function(){
+                        $("#overlay").fadeIn("fast");
+                        $("#addToPantry").fadeIn("fast");
+                    });
+
                     $("li span").click(function(e) {
                         var itemName = e.target.getAttribute('class');
                         var categoryID = e.target.parentNode.parentNode.parentNode.getAttribute('id');
+                        $(this).parent().css("display", "none");
                         var query = {"itemName": itemName,
                                     "categoryID": categoryID};
-                        var url = '../../../../addToRecipeBook.php';
+                        var url = 'deleteFromPantry.php';
                         $.post(url, query, function (response) {
-                            if (response==1){
+                            /*if (response==1){
                                 $("#overlay").fadeIn("fast");
                                 $("#success").fadeIn("fast");
                             }
                             else{
                                 $("#overlay").fadeIn("fast");
                                 $("#failure").fadeIn("fast");
-                            }
+                            }*/
                         });
                     });
                 </script>
             </div>
         </div>
     </div>
-    <script>
-        $('#addItemsLink').click(function(){
-            $("#overlay").fadeIn("fast");
-            $("#addToPantry").fadeIn("fast");
-        });
-    </script>
     <?php include("footer.php");
 else:
     include("index_loggedOut.php");

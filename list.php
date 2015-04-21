@@ -16,7 +16,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
         <div id="list">
             <h1>Shopping Lists</h1>
             <div id="addItems">
-                <a href="#"><img src="images/add.png" alt="add" />
+                <a href="#" id="addItemsLink"><img src="images/add.png" alt="add" />
                     Add Items to List</a>
             </div>
             <div class="clear"></div>
@@ -29,6 +29,29 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
                     ?>
                 </ul>
             </div>
+            <script>
+                $('#addItemsLink').click(function(){
+                    $("#overlay").fadeIn("fast");
+                    $("#addToList").fadeIn("fast");
+                });
+
+                $("li span").click(function(e) {
+                    var itemNum = e.target.getAttribute('id');
+                    $(this).parent().css("display", "none");
+                    var query = {"itemNum": itemNum};
+                    var url = 'deleteFromList.php';
+                    $.post(url, query, function (response) {
+                        /*if (response==1){
+                         $("#overlay").fadeIn("fast");
+                         $("#success").fadeIn("fast");
+                         }
+                         else{
+                         $("#overlay").fadeIn("fast");
+                         $("#failure").fadeIn("fast");
+                         }*/
+                    });
+                });
+            </script>
             <!--<div class="listColumn">
                 <ul>
                     <li>Item 1 <span class="deleteItem">X</span></li>
@@ -70,6 +93,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['UserID'])):
             <div id="addItemsToPantry"><img src="images/check.png" /> Add List Items to Pantry</div>
         </div>
     </div>
+
 <?php include("footer.php");
 else:
 include("index_loggedOut.php");

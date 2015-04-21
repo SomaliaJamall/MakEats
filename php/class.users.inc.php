@@ -1027,7 +1027,7 @@ THUMBHTML;
                 $recipeTitle = $row["title"];
                 $recipeDescription = $row["description"];
                 echo <<< "HTML"
-<div id="postID1">
+<div class={$row["title"]}>
     <!-- the user link will be dynamically generated-->
     <div class="userID userName"><h1><a href="user/$username">$username </a></h1></div>
     <div class="timeStamp">$timestamp</div>
@@ -1115,6 +1115,8 @@ RECIPECONTENT;
         <div class="viewMore"><a href='user/$username/recipes/{$row["recipeid"]}'>...</a></div>
     </div>
 </div>
+</div>
+</div>
 HTML;
             }
         }
@@ -1130,9 +1132,10 @@ HTML;
             $sql = "INSERT INTO pantry (userid_fk, categorytitle)
                     VALUES (:uid, :catTitle)";
             try {
+                $toInsert=ucwords(strtolower($_POST['category']));
                 $stmt = $this->_db->prepare($sql);
                 $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
-                $stmt->bindParam(':catTitle', $_POST['category'], PDO::PARAM_STR);
+                $stmt->bindParam(':catTitle', $toInsert, PDO::PARAM_STR);
                 $stmt->execute();
                 $stmt->setFetchMode(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
@@ -1164,9 +1167,10 @@ HTML;
                 VALUES (:catID, :item)";
                 try
                 {
+                    $toInsert=ucwords(strtolower($item));
                     $stmt = $this->_db->prepare($sql);
                     $stmt->bindParam(':catID', $categoryID, PDO::PARAM_STR);
-                    $stmt->bindParam(':item', $item, PDO::PARAM_STR);
+                    $stmt->bindParam(':item',$toInsert, PDO::PARAM_STR);
                     $stmt->execute();
                 }
                 catch(PDOException $e)
@@ -1256,18 +1260,36 @@ HTML;
         }
     }
 
+    public function deleteFromPantry($categoryID, $itemName)
+    {
+        $sql = "DELETE FROM pantryitems
+                WHERE categoryid_fk = :catid
+                AND itemName= :itemName";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':catid', $categoryID, PDO::PARAM_STR);
+            $stmt->bindParam(':itemName', $itemName, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
     public function addToList()
     {
-        foreach ($_POST["itemName"] as $item){
+        foreach ($_POST["listItemName"] as $item){
             if (!empty($item)){
-
                 $sql = "INSERT INTO list (userid_fk, item)
                 VALUES (:uid, :item)";
                 try
                 {
+                    $toInsert = ucwords(strtolower($item));
                     $stmt = $this->_db->prepare($sql);
                     $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
-                    $stmt->bindParam(':item', $item, PDO::PARAM_STR);
+                    $stmt->bindParam(':item', $toInsert, PDO::PARAM_STR);
                     $stmt->execute();
                 }
                 catch(PDOException $e)
@@ -1281,7 +1303,7 @@ HTML;
     public function getList()
     {
 
-        $sql = "SELECT item
+        $sql = "SELECT item, itemnumber
                 FROM list
                 WHERE userid_fk = :uid";
         try
@@ -1292,7 +1314,7 @@ HTML;
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             if($stmt->rowCount()>=1){
                 while($row = $stmt->fetch()) {
-                    echo "<li>".$row["item"]." <span class='deleteItem'>X</span></li>";
+                    echo "<li>".$row["item"]." <span class='deleteItem' id='".$row["itemnumber"]."'>X</span></li>";
                 }
                 return True;
             }
@@ -1300,6 +1322,22 @@ HTML;
             {
                 return "nothing";
             }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function deleteFromList($itemNumber)
+    {
+        $sql = "DELETE FROM list
+                WHERE itemnumber = :itemNum";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':itemNum', $itemNumber, PDO::PARAM_STR);
+            $stmt->execute();
         }
         catch(PDOException $e)
         {
