@@ -83,6 +83,72 @@
     ?>
 </div>
 
+<div id="addToPantry">
+    <div class="return"> X </div>
+    <form method="post" action=<?php echo "'".$_SERVER['REQUEST_URI']."'"; ?> id="addToPantryForm">
+        <label for="categoryDrop">Category Name</label>
+        <select id="categoryDrop" name="categoryDrop" required aria-required="true" >
+            <?php
+                include_once $_SERVER['DOCUMENT_ROOT']."/SE Project - MakEats/php/class.users.inc.php";
+                $users = new users($db);
+                $users->getPantryCategories();
+            ?>
+            <option value='New Category' id="newCatSelect">New Category</option>
+        </select><br/>
+        <div id="categoryNameContainer" style="display: none;">
+            <label for="category">Category Name</label>
+            <input type="text" id="category" name="category" value="Enter New Category Name">
+        </div>
+        <label for="itemName">Items</label>
+        <div id="itemNameContainer">
+            <input type="text" id="itemName" name="itemName[]" required aria-required="true">
+        </div>
+        <button class="addItemButton">+</button>
+        <div class="button">
+            <button type="submit" id="submit">Add Items</button>
+        </div>
+    </form>
+    <div id="passwordErrorText"></div>
+    <script>
+        if($("#categoryDrop").val() == 'New Category') {
+            $("#categoryNameContainer").css("display", "inline")
+        }
+        $( "#categoryDrop" ).change(function() {
+            if($(this).val() == 'New Category') {
+                $("#categoryNameContainer").css("display", "inline")
+            }
+            else{
+                $("#categoryNameContainer").css("display", "none")
+            }
+        });
+        dynamicFields(10, "text", "#itemNameContainer", ".addItemButton", 1, "itemName");
+        function dynamicFields(max_fields, type, wrapper_id, add_button_id, initialCount, inputName){
+            var wrapper         = $(wrapper_id); //Fields wrapper
+            var add_button      = $(add_button_id); //Add button ID
+
+            var x = initialCount; //initial text box count
+            $(add_button).click(function(e){ //on add input button click
+                e.preventDefault();
+                if(x < max_fields){ //max input box allowed
+                    x++; //text box increment
+                    $(wrapper).append('<div><input type="'+type+'" name="'+inputName+'[]"/><a href="#" class="remove_field">X</a></div>'); //add input box
+                }
+            });
+
+            $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                e.preventDefault(); $(this).parent('div').remove(); x--;
+            })
+        }
+    </script>
+    <?php
+    if(!empty($_POST['category'])):
+        include_once $_SERVER['DOCUMENT_ROOT']."/SE Project - MakEats/php/class.users.inc.php";
+        $users = new users($db);
+        $users->addToPantry();
+    endif;
+    ?>
+</div>
+
 <div id="success">
     <div class="return"> X </div>
     <div></div>
@@ -94,6 +160,13 @@
     <div></div>
     <h2>Recipe: <b><?php echo $recipeTitle; ?></b><br/>Already In RecipeBook</h2>
 </div>
+
+<div id="follow">
+    <div class="return"> X </div>
+    <div></div>
+    <h2>Followed: <b><?php echo $username; ?></b></h2>
+</div>
+
 
 <div id="changesMade">
     <div class="back"> << </div>

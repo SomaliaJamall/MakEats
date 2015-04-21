@@ -78,6 +78,15 @@ form input{
     background: none;
 }
 
+form select{
+    font    : 12px Arial, Helvetica, sans-serif;
+    border: 3px solid #000000;
+    padding : 5px;
+    margin  : 0;
+    width   : 240px;
+    background: none;
+}
+
 form textarea{
     font    : 25px Arial, Helvetica, sans-serif;
     border: 3px solid #000000;
@@ -88,6 +97,11 @@ form textarea{
 }
 
 form input:focus{
+    border-color   :#D30001;
+    outline-color: white;
+}
+
+form select:focus{
     border-color   :#D30001;
     outline-color: white;
 }
@@ -139,7 +153,7 @@ button{
 }
 
 
-#accountSettings, #changeEmail, #changeUsername, #changePassword, #changesMade, #success, #failure{
+#accountSettings, #changeEmail, #changeUsername, #changePassword, #changesMade, #success, #failure, #follow, #addToPantry{
     display: none;
     position:absolute;
     z-index: 2;
@@ -236,7 +250,7 @@ button{
     margin: 0 0;
 }
 
-#feed, #recipeBook, #pantry, #list, #userPage, #recipePage, #newRecipe{
+#feed, #recipeBook, #pantry, #list, #userPage, #recipePage, #newRecipe, #editProfile{
     background-color: white;
     width: 750px;
     /*padding:0 30px;*/
@@ -408,10 +422,11 @@ button{
     padding:11px 0 0 200px;
 }
 
-#pantry .deleteItem{
+#pantry li span{
     font-weight: bold;
     font-family: 'BebasBold', Arial, Helvetica, sans-serif;
     color: #D30001;
+    cursor: pointer;
 }
 
 /*Styles by section: #list div*/
@@ -434,7 +449,7 @@ button{
     margin:10px;
 }
 
-#list .deleteItem{
+#list li span{
     font-weight: bold;
     font-family: 'BebasBold', Arial, Helvetica, sans-serif;
     color: #D30001;
@@ -671,4 +686,85 @@ button{
 #addRecipeForm .error{
     color: #D30001;
     font-size: 20px;
+}
+
+/*Styles by section: #editProfile div*/
+
+#editProfile input {
+    font-size: 12px;
+    margin: 0;
+}
+
+#editProfile button{
+    font-size:30px;
+    border-width: 3px;
+    border-color: #007f01;
+    color: #007f01;
+    margin:5px 0;
+}
+
+#editProfile textarea{
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 300px;
+}
+
+#editProfile #userIcon{
+    width:100px;
+    height:100px;
+    margin:10px;
+    /*this background rule can be deleted after dynamically generating thumbs*/
+    background-size: contain;
+}
+
+#editProfile h2{
+    font-size: 25px;
+    color: #D30001;
+}
+
+#editProfile .current{
+    margin:10px 20px;
+}
+
+/*Styles by section: #addToPantry div*/
+#addToPantryForm label{
+    font-size:40px;
+    margin:0;
+}
+
+#addToPantryForm input{
+    font-size:12px;
+    margin:3px 0;
+}
+#addToPantryForm button{
+    font-size:50px;
+    margin:0;
+}
+
+#addToPantryForm .remove_field{
+    color: #D30001;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+
+#addToPantryForm textarea{
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 300px;
+}
+
+#addToPantryForm .addItemButton{
+    color: #007f01;
+}
+
+#addToPantryForm .error{
+    color: #D30001;
+    font-size: 20px;
+}
+
+#addToPantryForm .itemNameContainer input{
+    width:500px;
 }

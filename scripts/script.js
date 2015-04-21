@@ -14,7 +14,8 @@ $(document).ready(function(){
     centerDivOverlay("#changesMade");
     centerDivOverlay("#success");
     centerDivOverlay("#failure");
-
+    centerDivOverlay("#follow");
+    centerDivOverlay("#addToPantry");
 
     $('#accountSettingsLink').click(function(){
         $("#overlay").fadeIn("fast");
@@ -30,7 +31,8 @@ $(document).ready(function(){
         $("#changesMade").fadeOut("fast");
         $("#success").fadeOut("fast");
         $("#failure").fadeOut("fast");
-
+        $("#follow").fadeOut("fast");
+        $("#addToPantry").fadeOut("fast");
     });
 
     $('div.return').click(function(){
@@ -42,7 +44,8 @@ $(document).ready(function(){
         $("#changesMade").fadeOut("fast");
         $("#success").fadeOut("fast");
         $("#failure").fadeOut("fast");
-
+        $("#follow").fadeOut("fast");
+        $("#addToPantry").fadeOut("fast");
     });
 
     $('div.back').click(function(){

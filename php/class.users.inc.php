@@ -854,6 +854,458 @@ THUMBHTML;
         }
         return True;
     }
+
+    public function updateIcon()
+    {
+        $uid = $_SESSION['UserID'];
+        $userDir=HTTP_SERVER."/user/".$_SESSION["Username"]."/";
+        if (!is_dir($userDir))
+        {
+            mkdir($userDir, 0755, true);
+        }
+        if ($_FILES["user_icon"]["error"] == UPLOAD_ERR_OK) {
+
+            $target_dir = $userDir;
+            $file_name =  basename($_FILES["user_icon"]["name"]);
+            $target_file = $target_dir .$file_name;
+            $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+            // Check if image file is a actual image or fake image
+            $check = getimagesize($_FILES["user_icon"]["tmp_name"]);
+            if ($check !== false) {
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+            // Check file size
+            if ($_FILES["user_icon"]["size"] > 500000) {
+                echo "Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+            // Allow certain file formats
+            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif"
+            ) {
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+                // if everything is ok, try to upload file
+            } else {
+                if (move_uploaded_file($_FILES["user_icon"]["tmp_name"], $target_file)) {
+                    $sql = "UPDATE user
+                            SET icon = :picname
+                            WHERE userid = :uid";
+                    try
+                    {
+                        $imagePath = "user/".$_SESSION['Username']."/".$file_name;
+                        $stmt = $this->_db->prepare($sql);
+                        $stmt->bindParam(':picname', $imagePath, PDO::PARAM_STR);
+                        $stmt->bindParam(':uid', $uid, PDO::PARAM_STR);
+                        $stmt->execute();
+                    }
+                    catch(PDOException $e)
+                    {
+                        return FALSE;
+                    }
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+        }
+        return True;
+    }
+
+    public function updateBio()
+    {
+
+        $sql = "UPDATE user
+                SET bio=:bio
+                WHERE userid=:uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':bio', $_POST["user_bio"], PDO::PARAM_STR);
+            $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+            $stmt->execute();
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+    public function updateTitle()
+    {
+
+        $sql = "UPDATE user
+                SET title=:title
+                WHERE userid=:uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':title', $_POST["user_title"], PDO::PARAM_STR);
+            $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+            $stmt->execute();
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+
+    }
+    public function followUser($userid)
+    {
+
+        $sql = "INSERT INTO followedusers (userid_fk, followeduserid)
+                VALUES (:uid, :fuid)";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+            $stmt->bindParam(':fuid', $userid, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            return "success";
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function checkIfFollow($userid)
+    {
+
+        $sql = "SELECT followeduserid
+                FROM followedusers
+                WHERE followeduserid=:fuid
+                AND userid_fk=:uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+            $stmt->bindParam(':fuid', $userid, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount()>=1){
+                return "yes";
+            }
+            else{
+                return "no";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFeed()
+    {
+
+        $sql = "SELECT userid, title, description, pic1, pic2, pic3, recipeid, timestamp
+                FROM recipe
+                  INNER JOIN followedusers
+                    ON recipe.userid = followedusers.followeduserid
+                WHERE followedusers.userid_fk=:uid
+                ORDER BY timestamp DESC";
+        try
+        {
+
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $_SESSION["UserID"], PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            while($row = $stmt->fetch()){
+                $username = getUsername($row["userid"]);
+                $timestamp = date("M d y", $row["timestamp"]);
+                $recipeTitle = $row["title"];
+                $recipeDescription = $row["description"];
+                echo <<< "HTML"
+<div id="postID1">
+    <!-- the user link will be dynamically generated-->
+    <div class="userID userName"><h1><a href="user/$username">$username </a></h1></div>
+    <div class="timeStamp">$timestamp</div>
+    <div class="clear"></div>
+HTML;
+                if($row['pic1'] and $row['pic2'] and $row['pic3']){
+                    echo "<div class='threePics foodPics''>";
+                }
+                elseif($row['pic1'] and $row['pic2']){
+                    echo "<div class='twoPics foodPics''>";
+                }
+                else{
+                    echo "<div class='onePic foodPics''>";
+                }
+                echo "<ul>";
+                if ($row['pic1']){
+                    echo "<li><a href='user/".$username."/recipes/".$row["recipeid"]."/recipeImages/".$row['pic1']."' data-lightbox='".$row["recipeid"]."'><img src='user/".$username."/recipes/".$row["recipeid"]."/recipeImages/".$row['pic1']."'></a></li>";
+                }
+                if ($row['pic2']){
+                    echo "<li><a href='user/".$username."/recipes/".$row["recipeid"]."/recipeImages/".$row['pic2']."' data-lightbox='".$row["recipeid"]."'><img src='user/".$username."/recipes/".$row["recipeid"]."/recipeImages/".$row['pic2']."'></a></li>";
+                }
+                if ($row['pic3']){
+                    echo "<li><a href='user/".$username."/recipes/".$row["recipeid"]."/recipeImages/".$row['pic3']."' data-lightbox='".$row["recipeid"]."'><img src='user/".$username."/recipes/".$row["recipeid"]."/recipeImages/".$row['pic3']."'></a></li>";
+                }
+                echo "</ul>";
+                echo "</div>";
+
+                echo <<< "RECIPECONTENT"
+    <div class="recipeContent">
+            <div class="recipeDescription">
+                <h2><a href='user/$username/recipes/{$row["recipeid"]}'>$recipeTitle</a></h2>
+                $recipeDescription
+            </div>
+RECIPECONTENT;
+                $sql2 = "SELECT ingredient
+                FROM recipeingredients
+                WHERE recipeid=:rid";
+                try
+                {
+                    $stmt2 = $this->_db->prepare($sql2);
+                    $stmt2->bindParam(':rid', $row["recipeid"], PDO::PARAM_STR);
+                    $stmt2->execute();
+                    $stmt2->setFetchMode(PDO::FETCH_ASSOC);
+                    if($stmt2->rowCount()>=1)
+                    {
+                        echo "<div class='recipeItemList'>";
+                        echo "<h2>Ingredients</h2>";
+                        echo "<ul>";
+                        while($row2 = $stmt2->fetch()) {
+                            echo "<li>".$row2['ingredient']."</li>";
+                        }
+                        echo "</ul>";
+                    }
+                }
+                catch(PDOException $e)
+                {
+                    return FALSE;
+                }
+
+                $sql2 = "SELECT stepText
+                FROM recipestep
+                WHERE recipeid_fk=:rid";
+                try
+                {
+                    $stmt2 = $this->_db->prepare($sql2);
+                    $stmt2->bindParam(':rid', $row["recipeid"], PDO::PARAM_STR);
+                    $stmt2->execute();
+                    $stmt2->setFetchMode(PDO::FETCH_ASSOC);
+                    if($stmt2->rowCount()>=1)
+                    {
+                        echo "<div class='recipeProcess'>";
+                        echo "<h2>Steps</h2>";
+                        echo "<ol>";
+                        while($row2 = $stmt2->fetch()) {
+                            echo "<li>".$row2['stepText']."</li>";
+                        }
+                        echo "</ol>";
+                    }
+                }
+                catch(PDOException $e)
+                {
+                    return FALSE;
+                }
+                echo <<< "HTML"
+        <div class="viewMore"><a href='user/$username/recipes/{$row["recipeid"]}'>...</a></div>
+    </div>
+</div>
+HTML;
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function addToPantry()
+    {
+        if ($_POST['category']!="Enter New Category Name"){
+            $sql = "INSERT INTO pantry (userid_fk, categorytitle)
+                    VALUES (:uid, :catTitle)";
+            try {
+                $stmt = $this->_db->prepare($sql);
+                $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+                $stmt->bindParam(':catTitle', $_POST['category'], PDO::PARAM_STR);
+                $stmt->execute();
+                $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                return FALSE;
+            }
+            $newCategoryID = $this->_db->lastInsertID();
+        }
+        else{
+            $sql = "SELECT categoryid FROM pantry WHERE categorytitle = :catTitle AND userid_fk=:uid";
+            try {
+                $stmt = $this->_db->prepare($sql);
+                $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+                $stmt->bindParam(':catTitle', $_POST['categoryDrop'], PDO::PARAM_STR);
+                $stmt->execute();
+                $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                while ($row = $stmt->fetch()) {
+                    $newCategoryID = $row["categoryid"];
+                }
+
+            } catch (PDOException $e) {
+                return FALSE;
+            }
+        }
+        $categoryID = $newCategoryID;
+        foreach ($_POST["itemName"] as $item){
+            if (!empty($item)){
+
+                $sql = "INSERT INTO pantryitems (categoryid_fk, itemName)
+                VALUES (:catID, :item)";
+                try
+                {
+                    $stmt = $this->_db->prepare($sql);
+                    $stmt->bindParam(':catID', $categoryID, PDO::PARAM_STR);
+                    $stmt->bindParam(':item', $item, PDO::PARAM_STR);
+                    $stmt->execute();
+                }
+                catch(PDOException $e)
+                {
+                    return FALSE;
+                }
+            }
+        }
+    }
+
+    public function getPantry()
+    {
+
+        $sql = "SELECT categoryid, categorytitle
+                FROM pantry
+                WHERE pantry.userid_fk = :uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $_SESSION["UserID"], PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1){
+                while($row = $stmt->fetch()) {
+                    echo "<div class='pantryCategory' id='".$row['categoryid']."'>";
+                    echo "<h2>" . $row['categorytitle'] . "</h2><ul>";
+                    $sql2 = "SELECT itemName
+                            FROM pantryitems
+                            WHERE categoryid_fk = :catID";
+                    try
+                    {
+                        $stmt2 = $this->_db->prepare($sql2);
+                        $stmt2->bindParam(':catID', $row['categoryid'], PDO::PARAM_STR);
+                        $stmt2->execute();
+                        $stmt2->setFetchMode(PDO::FETCH_ASSOC);
+                        if($stmt2->rowCount()>=1){
+                            while($row2 = $stmt2->fetch()) {
+                                echo "<li>" . $row2['itemName'] . " <span class='".$row2['itemName']."'>X</span></li>";
+                            }
+                        }
+                    }
+                    catch(PDOException $e)
+                    {
+                        return FALSE;
+                    }
+                    echo "</ul></div>";
+                }
+                return True;
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function getPantryCategories()
+    {
+
+        $sql = "SELECT categorytitle
+                FROM pantry
+                WHERE pantry.userid_fk = :uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $_SESSION["UserID"], PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1){
+                while($row = $stmt->fetch()) {
+                    echo "<option value='" . $row['categorytitle'] . "'>" . $row['categorytitle'] . "</option>";
+                }
+                return True;
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
+
+    public function addToList()
+    {
+        foreach ($_POST["itemName"] as $item){
+            if (!empty($item)){
+
+                $sql = "INSERT INTO list (userid_fk, item)
+                VALUES (:uid, :item)";
+                try
+                {
+                    $stmt = $this->_db->prepare($sql);
+                    $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_STR);
+                    $stmt->bindParam(':item', $item, PDO::PARAM_STR);
+                    $stmt->execute();
+                }
+                catch(PDOException $e)
+                {
+                    return FALSE;
+                }
+            }
+        }
+    }
+
+    public function getList()
+    {
+
+        $sql = "SELECT item
+                FROM list
+                WHERE userid_fk = :uid";
+        try
+        {
+            $stmt = $this->_db->prepare($sql);
+            $stmt->bindParam(':uid', $_SESSION["UserID"], PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            if($stmt->rowCount()>=1){
+                while($row = $stmt->fetch()) {
+                    echo "<li>".$row["item"]." <span class='deleteItem'>X</span></li>";
+                }
+                return True;
+            }
+            else
+            {
+                return "nothing";
+            }
+        }
+        catch(PDOException $e)
+        {
+            return FALSE;
+        }
+    }
 }
 
 function getUserID($username)
@@ -884,6 +1336,8 @@ function getUserID($username)
         } catch (PDOException $e) {
         return FALSE;
     }
+
+
 }
 
 function getUsername($userid)

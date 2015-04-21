@@ -2,14 +2,17 @@ copy over new recipe page code to createNewRecipe (the code from 83)
 
 things that need to happen:
 Finish html/css/javascript for:
-    make "edit this userpage" form
+    Make all list and pantry items Title Case
+    ✔ make "edit this userpage" form
+        delete old icon after update
     make "follow user"
+        make "unfollow user"
     ✔ make "add new recipe" form
         add restrictions on character length
-    produce graphics/verbiage for empty pages
+    ✔ produce graphics/verbiage for empty pages
     create favicon (64×64 32×32, 24×24, and 16×16):
         note: http://www.xiconeditor.com/
-    make "add to recipeBook" confirmation popup
+    ✔ make "add to recipeBook" confirmation popup
     ✔ pantry
             ✔ - Dynamic div "flowing": http://masonry.desandro.com/
             - "add item" form pops up, goes:
@@ -66,7 +69,7 @@ resize images to thumbnails:
     http://code.tutsplus.com/tutorials/image-resizing-made-easy-with-php--net-10362
     http://www.white-hat-web-design.co.uk/blog/resizing-images-with-php/
 
-light box images to full size:
+✔ light box images to full size:
     http://lokeshdhakar.com/projects/lightbox2/
 
 later iterations/if there's time:
